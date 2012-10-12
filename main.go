@@ -16,6 +16,7 @@ func main() {
 		Name: os.Args[0],
 		Commands: []*commander.Command{
 			git_make_cmd_create(),
+			git_make_cmd_login(),
 		},
 		Flag: flag.NewFlagSet("goctogit", flag.ExitOnError),
 	}

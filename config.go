@@ -9,9 +9,10 @@ import (
 )
 
 var Cfg = gocfg.NewDefault()
+var CfgFname = os.ExpandEnv(filepath.Join("${HOME}", ".config", "go-octogit", "config.ini"))
 
 func init() {
-	cfgdir := os.ExpandEnv(filepath.Join("${HOME}", ".config", "go-octogit"))
+	cfgdir := filepath.Dir(CfgFname)
 	if !path_exists(cfgdir) {
 		err := os.MkdirAll(cfgdir, 0700)
 		if err != nil {
@@ -19,7 +20,8 @@ func init() {
 		}
 	}
 	
-	fname := filepath.Join(cfgdir, "config.ini")
+	fname := CfgFname
+
 	if !path_exists(fname) {
 		section := "go-octogit"
 		if !Cfg.AddSection(section) {

@@ -15,15 +15,15 @@ import (
 func git_make_cmd_create() *commander.Command {
 	cmd := &commander.Command{
 		Run:       git_run_cmd_create,
-		UsageLine: "create <repo> [options]",
+		UsageLine: "create [options] <repo>",
 		Short:     "create a new repository on github",
 		Long: `
 create creates a new git repository on github.
 
 ex:
- $ goctogit create mana-core -descr "mana-core is a fine repo"
- $ goctogit create hello -descr "a helloworld repo" -u mylogin
- $ goctogit create hello -descr "a hellowrold repo" -org myorganization
+ $ goctogit create -descr "mana-core is a fine repo" mana-core
+ $ goctogit create -descr "a helloworld repo" -u mylogin hello
+ $ goctogit create -descr "a hellowrold repo" -org myorganization hello
 `,
 		Flag: *flag.NewFlagSet("git-create", flag.ExitOnError),
 	}
@@ -35,7 +35,7 @@ ex:
 }
 
 func git_run_cmd_create(cmd *commander.Command, args []string) {
-	n := cmd.Name()
+	n := "github-"+cmd.Name()
 	if len(args) <= 0 {
 		err := fmt.Errorf("%s: you need to give a repository name", n)
 		handle_err(err)
@@ -68,6 +68,9 @@ func git_run_cmd_create(cmd *commander.Command, args []string) {
 
 	fmt.Printf("%s: creating repository [%s] with account [%s]...\n",
 		n, repo_name, account)
+	if descr != "" {
+		fmt.Printf("%s: descr: %q\n",n,descr)
+	}
 
 	data, err := json.Marshal(
 		map[string]interface{}{

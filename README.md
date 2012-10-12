@@ -26,3 +26,12 @@ $ goctogit create -descr 'some description' <reponame>
 
 ```
 
+TODO
+----
+
+# goctogit issues
+# goctogit issues <number>
+# goctogit issues <number> close
+# others ?
+
+

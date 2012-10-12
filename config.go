@@ -38,6 +38,10 @@ func init() {
 				panic(err.Error())
 			}
 		}
+		err := Cfg.WriteFile(CfgFname, 0600, "")
+		if err != nil {
+			panic(err.Error())
+		}
 	} else {
 		cfg, err := gocfg.ReadDefault(fname)
 		if err != nil {

@@ -28,6 +28,7 @@ func init() {
 		}
 		for k,v := range map[string]string{
 			"username": "",
+			"password": "",
 			"token": "",
 		}{
 			if !Cfg.AddOption(section, k, v) {

@@ -35,7 +35,7 @@ ex:
 }
 
 func git_run_cmd_create(cmd *commander.Command, args []string) {
-	n := "github-"+cmd.Name()
+	n := "github-" + cmd.Name()
 	if len(args) <= 0 {
 		err := fmt.Errorf("%s: you need to give a repository name", n)
 		handle_err(err)
@@ -69,7 +69,7 @@ func git_run_cmd_create(cmd *commander.Command, args []string) {
 	fmt.Printf("%s: creating repository [%s] with account [%s]...\n",
 		n, repo_name, account)
 	if descr != "" {
-		fmt.Printf("%s: descr: %q\n",n,descr)
+		fmt.Printf("%s: descr: %q\n", n, descr)
 	}
 
 	data, err := json.Marshal(
@@ -87,9 +87,14 @@ func git_run_cmd_create(cmd *commander.Command, args []string) {
 	req, err := ghc.NewAPIRequest("POST", url, bytes.NewBuffer(data))
 	handle_err(err)
 
-	_, err = ghc.RunRequest(req, new(http.Client))
+	resp, err := ghc.RunRequest(req, new(http.Client))
 	handle_err(err)
 
+	sc := resp.RawHttpResponse.StatusCode
+	if !resp.IsSuccess() && sc != 201 {
+		err = fmt.Errorf("%s: request did not succeed. got (status=%d) %v\n", n, resp.RawHttpResponse.StatusCode, resp.RawHttpResponse)
+		handle_err(err)
+	}
 	fmt.Printf("%s: creating repository [%s] with account [%s]... [done]\n",
 		n, repo_name, account)
 }

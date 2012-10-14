@@ -19,7 +19,7 @@ func init() {
 			panic(err.Error())
 		}
 	}
-	
+
 	fname := CfgFname
 
 	if !path_exists(fname) {
@@ -28,11 +28,11 @@ func init() {
 			err := fmt.Errorf("go-octogit: could not create section [%s] in file [%s]", section, fname)
 			panic(err.Error())
 		}
-		for k,v := range map[string]string{
+		for k, v := range map[string]string{
 			"username": "",
 			"password": "",
-			"token": "",
-		}{
+			"token":    "",
+		} {
 			if !Cfg.AddOption(section, k, v) {
 				err := fmt.Errorf("go-octogit: could not add option [%s] to section [%s]", k, section)
 				panic(err.Error())

@@ -1,17 +1,10 @@
 package main
 
-/*
- #include <unistd.h>
- #include <stdlib.h>
- #include <string.h>
-*/
-import "C"
-
 import (
 	"fmt"
 	"net/http"
-	"unsafe"
 
+	"github.com/mewpkg/gopass"
 	"github.com/sbinet/go-commander"
 	"github.com/sbinet/go-flag"
 	"github.com/sbinet/go-github-client/client"
@@ -85,17 +78,7 @@ func git_run_cmd_login(cmd *commander.Command, args []string) {
 }
 
 func getpasswd(prompt string) (string, error) {
-	c_prompt := C.CString(prompt)
-	defer C.free(unsafe.Pointer(c_prompt))
-
-	c_pwd := C.getpass(c_prompt)
-	if c_pwd == nil {
-		return "", fmt.Errorf("failed to get password")
-	}
-	passwd := C.GoString(c_pwd)
-	C.free(unsafe.Pointer(c_pwd))
-
-	return passwd, nil
+	return gopass.GetPass(prompt)
 }
 
 // EOF

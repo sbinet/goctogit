@@ -56,7 +56,7 @@ github-dl-ls: listing downloads for [mana-fwk/mana-release]... [done]
 ## ``dl-rm``
 ```sh
 # delete the download with id=350409 from a github repository
-$ goctogit dl-rm -org mana-fwk -repo mana-release 36354
+$ goctogit dl-rm -org mana-fwk -repo mana-release 350409
 github-dl-rm: deleting download id=350409 from [mana-fwk/mana-release]...
 github-dl-rm: deleting download id=350409 from [mana-fwk/mana-release]... [done]
 ```

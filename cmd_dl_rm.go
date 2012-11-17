@@ -67,7 +67,7 @@ func git_run_cmd_dl_rm(cmd *commander.Command, args []string) {
 	}
 	url := path.Join("repos", account, repo_name, "downloads", file_id)
 
-	fmt.Printf("%s: deleting download id=%s from %s/%s...\n",
+	fmt.Printf("%s: deleting download id=%s from [%s/%s]...\n",
 		n, file_id, account, repo_name)
 
 	req, err := ghc.NewAPIRequest("DELETE", url, nil)
@@ -87,7 +87,7 @@ func git_run_cmd_dl_rm(cmd *commander.Command, args []string) {
 	}
 	handle_err(err)
 
-	fmt.Printf("%s: deleting download id=%s from %s/%s... [done]\n",
+	fmt.Printf("%s: deleting download id=%s from [%s/%s]... [done]\n",
 		n, file_id, account, repo_name)
 }
 

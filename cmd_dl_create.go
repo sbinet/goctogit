@@ -61,18 +61,19 @@ func get_s3_data(r *client.GithubResult) (s3 s3_data, err error) {
 	return s3, err
 }
 
-func git_make_cmd_create_dl() *commander.Command {
+func git_make_cmd_dl_create() *commander.Command {
 	cmd := &commander.Command{
-		Run:       git_run_cmd_create_dl,
-		UsageLine: "create-dl [options] -f=file -repo=repo",
-		Short:     "create a new download on github",
+		Run:       git_run_cmd_dl_create,
+		UsageLine: "dl-create [options] -f=file -repo=repo",
+		Short:     "creates a new download on github",
 		Long: `
-create-dl creates a new download asset on a github repository.
+dl-create creates a new download asset on a github repository.
 
 ex:
- $ goctogit create-dl -descr "new tarball" -f=foo.tar.gz -repo=mana-core
+ $ goctogit dl-create -descr "new tarball" -f=foo.tar.gz -repo=mana-core
+ $ goctogit dl-create -descr "new tarball" -f=foo.tar.gz -repo=mana-core -org my-organyzation
 `,
-		Flag: *flag.NewFlagSet("git-create-dl", flag.ExitOnError),
+		Flag: *flag.NewFlagSet("git-dl-create", flag.ExitOnError),
 	}
 	cmd.Flag.String("descr", "", "description of the new github repository")
 	cmd.Flag.String("f", "", "path to file to upload on github")
@@ -83,7 +84,7 @@ ex:
 	return cmd
 }
 
-func git_run_cmd_create_dl(cmd *commander.Command, args []string) {
+func git_run_cmd_dl_create(cmd *commander.Command, args []string) {
 	n := "github-" + cmd.Name()
 	if len(args) != 0 {
 		err := fmt.Errorf("%s: does NOT take any positional parameter", n)

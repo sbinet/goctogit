@@ -60,8 +60,8 @@ func git_run_cmd_dl_ls(cmd *commander.Command, args []string) {
 	}
 	url := path.Join("repos", account, repo_name, "downloads")
 
-	fmt.Printf("%s: listing downloads for repository [%s] with account [%s]...\n",
-		n, repo_name, account)
+	fmt.Printf("%s: listing downloads for %s/%s...\n",
+		n, account, repo_name)
 
 	req, err := ghc.NewAPIRequest("GET", url, nil)
 	handle_err(err)
@@ -82,7 +82,7 @@ func git_run_cmd_dl_ls(cmd *commander.Command, args []string) {
 		json := client.JsonMap(elmt.(map[string]interface{}))
 		fmt.Printf("=== %s\n",
 			json.GetString("name"),
-			)
+		)
 		fmt.Printf("%3s id=%v\n", "", int64(json.GetFloat("id")))
 		fmt.Printf("%3s sz=%v bytes\n", "", int64(json.GetFloat("size")))
 		descr := json.GetString("description")
@@ -92,8 +92,8 @@ func git_run_cmd_dl_ls(cmd *commander.Command, args []string) {
 		fmt.Printf("%3s %s\n", "", json.GetString("html_url"))
 	}
 
-	fmt.Printf("%s: listing downloads for repository [%s] with account [%s]... [done]\n",
-		n, repo_name, account)
+	fmt.Printf("%s: listing downloads for %s/%s... [done]\n",
+		n, account, repo_name)
 }
 
 // EOF

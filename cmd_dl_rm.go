@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"path"
 	"net/http"
+	"path"
 
 	"github.com/sbinet/go-commander"
 	"github.com/sbinet/go-flag"

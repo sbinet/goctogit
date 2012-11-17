@@ -67,8 +67,8 @@ func git_run_cmd_dl_rm(cmd *commander.Command, args []string) {
 	}
 	url := path.Join("repos", account, repo_name, "downloads", file_id)
 
-	fmt.Printf("%s: deleting download id=%s from repository [%s] with account [%s]...\n",
-		n, file_id, repo_name, account)
+	fmt.Printf("%s: deleting download id=%s from %s/%s...\n",
+		n, file_id, account, repo_name)
 
 	req, err := ghc.NewAPIRequest("DELETE", url, nil)
 	handle_err(err)
@@ -77,13 +77,18 @@ func git_run_cmd_dl_rm(cmd *commander.Command, args []string) {
 	handle_err(err)
 
 	sc := resp.RawHttpResponse.StatusCode
-	if sc != 204 {
+	switch sc {
+	case 204:
+		// all good
+	case 404:
+		err = fmt.Errorf("%s: no such file-id\n", n)
+	default:
 		err = fmt.Errorf("%s: request did not succeed. got (status=%d) %v\n", n, resp.RawHttpResponse.StatusCode, resp.RawHttpResponse)
-		handle_err(err)
 	}
+	handle_err(err)
 
-	fmt.Printf("%s: deleting download id=%s from repository [%s] with account [%s]... [done]\n",
-		n, file_id, repo_name, account)
+	fmt.Printf("%s: deleting download id=%s from %s/%s... [done]\n",
+		n, file_id, account, repo_name)
 }
 
 // EOF

@@ -16,15 +16,22 @@ Using ``goctogit``
 
 Available commands:
 
+## ``login``
 ```sh
 
-# stores the github authentication data
+# store the github authentication data
 $ goctogit login
+```
 
+## ``create``
+```sh
 # create a repository on github named 'reponame' with some description
 $ goctogit create -descr 'some description' <reponame>
+```
 
-# lists the available downloads on a github repo
+## ``dl-ls``
+```sh
+# list the available downloads on a github repo
 $ goctogit dl-ls -org mana-fwk mana-release
 github-dl-ls: listing downloads for [mana-fwk/mana-release]...
 === mana-20121116-000.tar.gz
@@ -44,12 +51,18 @@ github-dl-ls: listing downloads for [mana-fwk/mana-release]...
     sz=4731904 bytes
     https://github.com/downloads/mana-fwk/mana-release/mana-20121031.tar.gz
 github-dl-ls: listing downloads for [mana-fwk/mana-release]... [done]
+```
 
-# deletes the download with id=350409 from a github repository
+## ``dl-rm``
+```sh
+# delete the download with id=350409 from a github repository
 $ goctogit dl-rm -org mana-fwk -repo mana-release 36354
 github-dl-rm: deleting download id=350409 from [mana-fwk/mana-release]...
 github-dl-rm: deleting download id=350409 from [mana-fwk/mana-release]... [done]
+```
 
+## ``dl-create``
+```sh
 # upload a file to the download page of a github repository
 $ goctogit dl-create -descr "a new tarball" -f foo.tar.gz -repo=mana-release -org my-org
 github-dl-create: uploading [foo.tar.gz] to [my-org/mana-release]...

@@ -26,7 +26,7 @@ $ goctogit create -descr 'some description' <reponame>
 
 # lists the available downloads on a github repo
 $ goctogit dl-ls -org mana-fwk mana-release
-github-dl-ls: listing downloads for repository [mana-release] with account [mana-fwk]...
+github-dl-ls: listing downloads for [mana-fwk/mana-release]...
 === mana-20121116-000.tar.gz
     id=363354
     sz=4782080 bytes
@@ -43,12 +43,12 @@ github-dl-ls: listing downloads for repository [mana-release] with account [mana
     id=350409
     sz=4731904 bytes
     https://github.com/downloads/mana-fwk/mana-release/mana-20121031.tar.gz
-github-dl-ls: listing downloads for repository [mana-release] with account [mana-fwk]... [done]
+github-dl-ls: listing downloads for [mana-fwk/mana-release]... [done]
 
 # deletes the download with id=350409 from a github repository
 $ goctogit dl-rm -org mana-fwk -repo mana-release 36354
-github-dl-rm: deleting download id=350409 from repository [mana-release] with account [mana-fwk]...
-github-dl-rm: deleting download id=350409 from repository [mana-release] with account [mana-fwk]...[done]
+github-dl-rm: deleting download id=350409 from [mana-fwk/mana-release]...
+github-dl-rm: deleting download id=350409 from [mana-fwk/mana-release]... [done]
 
 # upload a file to the download page of a github repository
 $ goctogit dl-create -descr "a new tarball" -f foo.tar.gz -repo=mana-release -org my-org

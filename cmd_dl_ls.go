@@ -14,7 +14,7 @@ func git_make_cmd_dl_ls() *commander.Command {
 	cmd := &commander.Command{
 		Run:       git_run_cmd_dl_ls,
 		UsageLine: "dl-ls [options] repo",
-		Short:     "lists the available downloads of github repository",
+		Short:     "lists the available downloads of a github repository",
 		Long: `
 dl-ls lists the available downloads of a github repository.
 

@@ -8,9 +8,7 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
-	//net_url "net/url"
 	"os"
-	"os/exec"
 	"path"
 	"path/filepath"
 
@@ -139,11 +137,8 @@ func git_run_cmd_dl_create(cmd *commander.Command, args []string) {
 	}
 	url := path.Join("repos", account, repo_name, "downloads")
 
-	fmt.Printf("%s: creating download for repository [%s] with account [%s]...\n",
-		n, repo_name, account)
-	if descr != "" {
-		fmt.Printf("%s: descr: %q\n", n, descr)
-	}
+	fmt.Printf("%s: uploading [%s] to [%s/%s]...\n",
+		n, fname, account, repo_name)
 
 	data, err := json.Marshal(
 		map[string]interface{}{
@@ -161,8 +156,21 @@ func git_run_cmd_dl_create(cmd *commander.Command, args []string) {
 	handle_err(err)
 
 	sc := resp.RawHttpResponse.StatusCode
-	if !resp.IsSuccess() && sc != 201 {
-		err = fmt.Errorf("%s: request did not succeed. got (status=%d) %v\n", n, resp.RawHttpResponse.StatusCode, resp.RawHttpResponse)
+	switch sc {
+	case 201:
+		// all good
+	case 422:
+		// pre-existing file
+		err = fmt.Errorf(
+			"%s: a file with that name is already in the download area!\n",
+			n)
+	default:
+		err = fmt.Errorf(
+			"%s: request did not succeed. got (status=%d)\n%v\n",
+			n, sc, resp.RawHttpResponse,
+		)
+	}
+	if err != nil {
 		handle_err(err)
 	}
 
@@ -171,10 +179,9 @@ func git_run_cmd_dl_create(cmd *commander.Command, args []string) {
 		handle_err(err)
 	}
 
-	curl_cmd := []string{}
 	body_buf := bytes.NewBufferString("")
 	body_writer := multipart.NewWriter(body_buf)
-	for _, v := range [][]string{
+	for _, v := range [][2]string{
 		{"key", s3.Path},
 		{"acl", "public-read"},
 		{"success_action_status", "201"},
@@ -182,72 +189,54 @@ func git_run_cmd_dl_create(cmd *commander.Command, args []string) {
 		{"AWSAccessKeyId", s3.AccessKeyId},
 		{"Policy", s3.Policy},
 		{"Signature", s3.Signature},
-		//{"Content-Type",          s3.ContentType},
+		{"Content-Type", s3.ContentType},
 	} {
-		curl_cmd = append(curl_cmd, "-F", `"`+v[0]+`=`+v[1]+`"`)
-		fmt.Printf("--write-field: %q %q\n", v[0], v[1])
 		err = body_writer.WriteField(v[0], v[1])
 		if err != nil {
 			handle_err(err)
 		}
 	}
 
-
-	{
-		//FIXME --- we shouldn't do that...
-			curl_cmd = append(curl_cmd, "-F", `"file=@`+fname+`"`, "-v", s3.S3Url)
-		fmt.Printf("curl-cmd: %v\n", curl_cmd)
-		cmd := exec.Command("curl", curl_cmd...)
-		if cmd != nil {
-			err = cmd.Run()
-			if err != nil {
-				handle_err(err)
-			}
-		}
+	file_writer, err := body_writer.CreateFormFile("file", fname)
+	if err != nil {
+		handle_err(err)
 	}
 
-	if false {
-		file_writer, err := body_writer.CreateFormFile("file", fname)
-		if err != nil {
-			handle_err(err)
-		}
-		//defer file_writer.Close()
-
-		fh, err := os.Open(fname)
-		if err != nil {
-			handle_err(err)
-		}
-		defer fh.Close()
-
-		_, err = io.Copy(file_writer, fh)
-		if err != nil {
-			handle_err(err)
-		}
-
-		content_type := body_writer.FormDataContentType()
-		err = body_writer.Close()
-		if err != nil {
-			handle_err(err)
-		}
-
-		fmt.Printf("===> %s\n", content_type)
-		/*
-		 s3_resp, err := http.Post(s3.S3Url, content_type, body_buf)
-		 if err != nil {
-		 fmt.Printf("\n%s: s3-request failed:\n%v\n%v\n", n, err, s3_resp)
-		 handle_err(err)
-		 }
-
-		 if s3_resp.StatusCode != 201 {
-		 //err = fmt.Errorf("%s: s3-request did not succeed. got (status=%d) %v\n", n, s3_resp.StatusCode, s3_resp)
-		 //handle_err(err)
-		 } else {
-		 fmt.Printf("%s: response:\n%v\n", n, s3_resp)
-		 }
-		 */
+	fh, err := os.Open(fname)
+	if err != nil {
+		handle_err(err)
 	}
-	fmt.Printf("%s: creating download for repository [%s] with account [%s]... [done]\n",
-		n, repo_name, account)
+	defer fh.Close()
+
+	_, err = io.Copy(file_writer, fh)
+	if err != nil {
+		handle_err(err)
+	}
+
+	content_type := body_writer.FormDataContentType()
+	err = body_writer.Close()
+	if err != nil {
+		handle_err(err)
+	}
+
+	s3_resp, err := http.Post(s3.S3Url, content_type, body_buf)
+	if err != nil {
+		fmt.Printf("\n%s: s3-request failed:\n%v\n%v\n", n, err, s3_resp)
+		handle_err(err)
+	}
+
+	switch s3_resp.StatusCode {
+	case 201:
+		// all good
+	default:
+		err = fmt.Errorf("%s: s3-request did not succeed. got (status=%d) %v\n", n, s3_resp.StatusCode, s3_resp)
+	}
+	if err != nil {
+		handle_err(err)
+	}
+
+	fmt.Printf("%s: uploading [%s] to [%s/%s]... [done]\n",
+		n, fname, account, repo_name)
 }
 
 // EOF

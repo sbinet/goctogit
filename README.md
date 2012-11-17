@@ -50,6 +50,10 @@ $ goctogit dl-rm -org mana-fwk -repo mana-release 36354
 github-dl-rm: deleting download id=350409 from repository [mana-release] with account [mana-fwk]...
 github-dl-rm: deleting download id=350409 from repository [mana-release] with account [mana-fwk]...[done]
 
+# upload a file to the download page of a github repository
+$ goctogit dl-create -descr "a new tarball" -f foo.tar.gz -repo=mana-release -org my-org
+github-dl-create: uploading [foo.tar.gz] to [my-org/mana-release]...
+github-dl-create: uploading [foo.tar.gz] to [my-org/mana-release]... [done]
 ```
 
 TODO

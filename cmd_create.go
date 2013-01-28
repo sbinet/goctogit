@@ -95,6 +95,14 @@ func git_run_cmd_create(cmd *commander.Command, args []string) {
 		err = fmt.Errorf("%s: request did not succeed. got (status=%d) %v\n", n, resp.RawHttpResponse.StatusCode, resp.RawHttpResponse)
 		handle_err(err)
 	}
+	fmt.Printf("%s: you can push from an existing repository like so:\n", n)
+	fmt.Printf(`
+git remote add origin https://github.com/%s/%s.git
+git push -u origin master
+
+git remote add origin git@github.com:%s/%s
+git push -u origin master
+`, account, repo_name, account, repo_name)
 	fmt.Printf("%s: creating repository [%s] with account [%s]... [done]\n",
 		n, repo_name, account)
 }

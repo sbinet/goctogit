@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gonuts/commander"
+	"github.com/gonuts/flag"
 	"github.com/mewpkg/gopass"
-	"github.com/sbinet/go-commander"
-	"github.com/sbinet/go-flag"
 	"github.com/sbinet/go-github-client/client"
 )
 

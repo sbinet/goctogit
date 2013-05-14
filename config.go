@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	gocfg "github.com/sbinet/go-config/config"
+	gocfg "github.com/gonuts/config"
 )
 
 var Cfg = gocfg.NewDefault()
